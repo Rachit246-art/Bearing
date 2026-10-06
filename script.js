@@ -84,24 +84,44 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollObserver.observe(el);
     });
 
-    // Hero 3-Banner Slider Logic
+    // ==========================================
+    // Royal Hero Showcase: Slider + Parallax + Sparkles Engine
+    // ==========================================
+    const heroSlider = document.querySelector('.hero-slider');
+    const sliderViewport = document.getElementById('sliderViewport');
     const sliderTrack = document.getElementById('sliderTrack');
     const slides = document.querySelectorAll('.slide');
     const prevBtn = document.getElementById('prevSlide');
     const nextBtn = document.getElementById('nextSlide');
     const dots = document.querySelectorAll('.dot');
-    
+    const progressFill = document.getElementById('sliderProgressFill');
+    const counterCur = document.querySelector('.slider-counter .cur-index');
+    const heroBadge = document.getElementById('heroBadge');
+    const sparklesCanvas = document.getElementById('heroSparklesCanvas');
+
     if (sliderTrack && slides.length > 0) {
         let currentIndex = 0;
-        let slideInterval;
-        const autoSlideDelay = 4500; // 4.5 seconds
+        let progressAnimFrame = null;
+        const autoSlideDelay = 5200; // 5.2s per slide
+        let progressStartTime = 0;
+        let isPaused = false;
+        let elapsedBeforePause = 0;
 
+        // --- Slide Update ---
         const updateSlider = (index) => {
             if (index < 0) index = slides.length - 1;
             if (index >= slides.length) index = 0;
             currentIndex = index;
 
             sliderTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+            slides.forEach((s, idx) => {
+                if (idx === currentIndex) {
+                    s.classList.add('active-slide');
+                } else {
+                    s.classList.remove('active-slide');
+                }
+            });
 
             dots.forEach((dot, idx) => {
                 if (idx === currentIndex) {
@@ -110,30 +130,73 @@ document.addEventListener('DOMContentLoaded', () => {
                     dot.classList.remove('active');
                 }
             });
+
+            if (counterCur) {
+                counterCur.textContent = String(currentIndex + 1).padStart(2, '0');
+            }
+
+            resetProgress();
         };
 
-        const startAutoSlide = () => {
-            stopAutoSlide();
-            slideInterval = setInterval(() => {
-                updateSlider(currentIndex + 1);
-            }, autoSlideDelay);
+        // --- Progress Bar Animation ---
+        const startProgress = () => {
+            if (progressAnimFrame) cancelAnimationFrame(progressAnimFrame);
+            progressStartTime = performance.now() - elapsedBeforePause;
+
+            const step = (now) => {
+                if (isPaused) return;
+                const elapsed = now - progressStartTime;
+                const pct = Math.min((elapsed / autoSlideDelay) * 100, 100);
+
+                if (progressFill) {
+                    progressFill.style.width = `${pct}%`;
+                }
+
+                if (elapsed >= autoSlideDelay) {
+                    elapsedBeforePause = 0;
+                    updateSlider(currentIndex + 1);
+                    startProgress();
+                } else {
+                    progressAnimFrame = requestAnimationFrame(step);
+                }
+            };
+            progressAnimFrame = requestAnimationFrame(step);
         };
 
-        const stopAutoSlide = () => {
-            if (slideInterval) clearInterval(slideInterval);
+        const resetProgress = () => {
+            elapsedBeforePause = 0;
+            if (progressFill) progressFill.style.width = '0%';
+            if (progressAnimFrame) cancelAnimationFrame(progressAnimFrame);
+            if (!isPaused) {
+                startProgress();
+            }
         };
 
+        const pauseSlider = () => {
+            if (!isPaused) {
+                isPaused = true;
+                elapsedBeforePause = performance.now() - progressStartTime;
+                if (progressAnimFrame) cancelAnimationFrame(progressAnimFrame);
+            }
+        };
+
+        const resumeSlider = () => {
+            if (isPaused) {
+                isPaused = false;
+                startProgress();
+            }
+        };
+
+        // Controls
         if (nextBtn) {
             nextBtn.addEventListener('click', () => {
                 updateSlider(currentIndex + 1);
-                startAutoSlide();
             });
         }
 
         if (prevBtn) {
             prevBtn.addEventListener('click', () => {
                 updateSlider(currentIndex - 1);
-                startAutoSlide();
             });
         }
 
@@ -141,19 +204,225 @@ document.addEventListener('DOMContentLoaded', () => {
             dot.addEventListener('click', () => {
                 const targetIdx = parseInt(dot.getAttribute('data-index'), 10);
                 updateSlider(targetIdx);
-                startAutoSlide();
             });
         });
 
-        // Pause auto-sliding when mouse is hovering over hero slider
-        const heroSlider = document.querySelector('.hero-slider');
+        // Hover pause on slider
         if (heroSlider) {
-            heroSlider.addEventListener('mouseenter', stopAutoSlide);
-            heroSlider.addEventListener('mouseleave', startAutoSlide);
+            heroSlider.addEventListener('mouseenter', pauseSlider);
+            heroSlider.addEventListener('mouseleave', resumeSlider);
         }
 
-        // Initialize auto-sliding
-        startAutoSlide();
+        // Touch swipe gestures
+        let touchStartX = 0;
+        let touchEndX = 0;
+        if (heroSlider) {
+            heroSlider.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                pauseSlider();
+            }, { passive: true });
+
+            heroSlider.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                const diff = touchStartX - touchEndX;
+                if (Math.abs(diff) > 45) {
+                    if (diff > 0) updateSlider(currentIndex + 1);
+                    else updateSlider(currentIndex - 1);
+                }
+                resumeSlider();
+            }, { passive: true });
+        }
+
+        // Initialize progress
+        updateSlider(0);
+        startProgress();
+    }
+
+    // --- Interactive 3D Mouse Parallax & Scroll Parallax ---
+    if (heroSlider && sliderViewport) {
+        let mouseX = 0;
+        let mouseY = 0;
+        let currentTiltX = 0;
+        let currentTiltY = 0;
+        let isHovered = false;
+
+        const onMouseMove = (e) => {
+            const rect = heroSlider.getBoundingClientRect();
+            // Normalized -1 to +1
+            mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            mouseY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        };
+
+        const renderParallax = () => {
+            // Smooth lerp easing
+            const targetX = isHovered ? mouseX : 0;
+            const targetY = isHovered ? mouseY : 0;
+            currentTiltX += (targetX - currentTiltX) * 0.08;
+            currentTiltY += (targetY - currentTiltY) * 0.08;
+
+            // Scroll parallax offset
+            const scrollY = window.scrollY;
+            const scrollShift = Math.min(scrollY * 0.16, 80);
+
+            // 3D perspective tilt & shift
+            const tiltXDeg = currentTiltY * -3.2;
+            const tiltYDeg = currentTiltX * 3.2;
+            const transX = currentTiltX * 10;
+            const transY = currentTiltY * 6 + scrollShift;
+
+            sliderViewport.style.transform = `perspective(1200px) rotateX(${tiltXDeg}deg) rotateY(${tiltYDeg}deg) translate3d(${transX}px, ${transY}px, 0)`;
+
+            if (heroBadge) {
+                heroBadge.style.transform = `translateX(calc(-50% + ${-currentTiltX * 14}px)) translateY(${-currentTiltY * 8}px)`;
+            }
+
+            requestAnimationFrame(renderParallax);
+        };
+
+        heroSlider.addEventListener('mousemove', (e) => {
+            isHovered = true;
+            onMouseMove(e);
+        });
+
+        heroSlider.addEventListener('mouseleave', () => {
+            isHovered = false;
+            mouseX = 0;
+            mouseY = 0;
+        });
+
+        requestAnimationFrame(renderParallax);
+    }
+
+    // --- Floating Royal Sparkles Canvas Particle System ---
+    if (sparklesCanvas) {
+        const ctx = sparklesCanvas.getContext('2d');
+        let width = 0;
+        let height = 0;
+        let isInView = true;
+
+        const resizeCanvas = () => {
+            const rect = sparklesCanvas.getBoundingClientRect();
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            width = rect.width;
+            height = rect.height;
+            sparklesCanvas.width = width * dpr;
+            sparklesCanvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+        };
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Particle definitions
+        const particleCount = 38;
+        const particles = [];
+        const colors = [
+            'rgba(243, 231, 202, ', // warm ivory
+            'rgba(184, 147, 68, ',  // royal gold
+            'rgba(230, 212, 176, ', // champagne gold
+            'rgba(255, 255, 255, '  // brilliant sparkle
+        ];
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * (width || 1200),
+                y: Math.random() * (height || 550),
+                size: Math.random() * 2.8 + 0.8,
+                baseAlpha: Math.random() * 0.6 + 0.25,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedY: -(Math.random() * 0.45 + 0.15),
+                speedX: (Math.random() - 0.5) * 0.35,
+                driftAngle: Math.random() * Math.PI * 2,
+                driftSpeed: Math.random() * 0.02 + 0.008,
+                depth: Math.random() * 0.8 + 0.2,
+                isStar: Math.random() > 0.65,
+                rotation: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.03
+            });
+        }
+
+        // Draw 4-point golden sparkle star
+        const drawSparkleStar = (cx, cy, spikes, outerRadius, innerRadius, alpha, color) => {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            const step = Math.PI / spikes;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * outerRadius;
+                y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+
+                x = cx + Math.cos(rot) * innerRadius;
+                y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+            ctx.fillStyle = `${color}${alpha})`;
+            ctx.shadowColor = 'rgba(230, 212, 176, 0.9)';
+            ctx.shadowBlur = 8;
+            ctx.fill();
+            ctx.restore();
+        };
+
+        const renderSparkles = () => {
+            if (!isInView) {
+                requestAnimationFrame(renderSparkles);
+                return;
+            }
+
+            ctx.clearRect(0, 0, width, height);
+
+            particles.forEach(p => {
+                p.y += p.speedY;
+                p.driftAngle += p.driftSpeed;
+                p.x += Math.sin(p.driftAngle) * 0.5 + p.speedX;
+                p.rotation += p.rotSpeed;
+
+                // Wrap around edges
+                if (p.y < -15) {
+                    p.y = height + 10;
+                    p.x = Math.random() * width;
+                }
+                if (p.x < -15) p.x = width + 10;
+                if (p.x > width + 15) p.x = -10;
+
+                const pulse = Math.sin(p.driftAngle * 2) * 0.25;
+                const alpha = Math.max(0.08, Math.min(1, p.baseAlpha + pulse));
+
+                if (p.isStar) {
+                    drawSparkleStar(p.x, p.y, 4, p.size * 2.4, p.size * 0.6, alpha, p.color);
+                } else {
+                    // Soft glowing bokeh orb
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `${p.color}${alpha})`;
+                    ctx.shadowColor = 'rgba(184, 147, 68, 0.6)';
+                    ctx.shadowBlur = 6;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            });
+
+            requestAnimationFrame(renderSparkles);
+        };
+
+        // Pause particle engine when off-screen
+        const sparklesObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isInView = entry.isIntersecting;
+            });
+        }, { threshold: 0.05 });
+
+        sparklesObserver.observe(sparklesCanvas);
+        requestAnimationFrame(renderSparkles);
     }
 
 
@@ -166,13 +435,15 @@ document.addEventListener('DOMContentLoaded', () => {
         occNext.addEventListener("click", () => occTrack.scrollBy({ left: 220, behavior: "smooth" }));
     }
 
-    // ---- Featured cards slider (with smooth auto-slide) ----
-    // ---- Featured cards slider (manual arrow navigation) ----
+    // ---- Featured cards slider (smooth auto-slide + arrow navigation) ----
     const featTrack = document.getElementById("featTrack");
     const featPrev = document.getElementById("featPrev");
     const featNext = document.getElementById("featNext");
 
     if (featTrack) {
+        let featAutoSlideInterval;
+        const featDelay = 3200; // 3.2s smooth auto-scroll
+
         const getScrollAmount = () => {
             const firstCard = featTrack.querySelector(".feat-card");
             return firstCard ? firstCard.offsetWidth + 24 : 224;
@@ -198,13 +469,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        const startFeatAutoSlide = () => {
+            stopFeatAutoSlide();
+            featAutoSlideInterval = setInterval(slideNextCard, featDelay);
+        };
+
+        const stopFeatAutoSlide = () => {
+            if (featAutoSlideInterval) clearInterval(featAutoSlideInterval);
+        };
+
         if (featNext) {
-            featNext.addEventListener("click", slideNextCard);
+            featNext.addEventListener("click", () => {
+                slideNextCard();
+                startFeatAutoSlide();
+            });
         }
 
         if (featPrev) {
-            featPrev.addEventListener("click", slidePrevCard);
+            featPrev.addEventListener("click", () => {
+                slidePrevCard();
+                startFeatAutoSlide();
+            });
         }
+
+        // Pause on mouse hover & resume on mouse leave
+        featTrack.addEventListener("mouseenter", stopFeatAutoSlide);
+        featTrack.addEventListener("mouseleave", startFeatAutoSlide);
+        featTrack.addEventListener("touchstart", stopFeatAutoSlide, { passive: true });
+        featTrack.addEventListener("touchend", startFeatAutoSlide, { passive: true });
+
+        // Start auto-slide on page load
+        startFeatAutoSlide();
     }
 
 
