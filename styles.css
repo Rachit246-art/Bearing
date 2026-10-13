@@ -138,10 +138,19 @@ button, input, select, textarea {
 }
 
 .gold-gradient-text {
-    background: var(--gold-gradient);
+    background: linear-gradient(
+        90deg, 
+        #c89b3c 0%, 
+        #dfb76c 25%, 
+        #ffffff 50%, 
+        #dfb76c 75%, 
+        #c89b3c 100%
+    );
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-style: italic;
+    animation: textShimmerSweep 7s linear infinite;
 }
 
 /* Shared Buttons */
@@ -838,14 +847,28 @@ button, input, select, textarea {
     position: relative;
     height: 240px;
     border-radius: var(--border-radius-md);
-    background-size: cover;
-    background-position: center;
     overflow: hidden;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     transition: var(--transition-smooth);
     display: flex;
     align-items: flex-end;
+}
+
+.industry-card-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    display: block;
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+}
+
+.industry-card:hover .industry-card-bg {
+    transform: scale(1.08);
+    filter: brightness(1.05);
 }
 
 .industry-card:hover {
@@ -856,17 +879,19 @@ button, input, select, textarea {
 .industry-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(10, 11, 14, 0.1) 0%, rgba(10, 11, 14, 0.5) 50%, rgba(10, 11, 14, 0.95) 100%);
-    transition: opacity 0.35s ease;
+    z-index: 2;
+    background: linear-gradient(180deg, rgba(10, 11, 14, 0.05) 0%, rgba(10, 11, 14, 0.5) 50%, rgba(10, 11, 14, 0.95) 100%);
+    transition: opacity 0.35s ease, background 0.35s ease;
+    pointer-events: none;
 }
 
 .industry-card:hover .industry-overlay {
-    background: linear-gradient(180deg, rgba(10, 11, 14, 0.2) 0%, rgba(10, 11, 14, 0.6) 40%, rgba(10, 11, 14, 0.98) 100%);
+    background: linear-gradient(180deg, rgba(10, 11, 14, 0.1) 0%, rgba(10, 11, 14, 0.45) 40%, rgba(10, 11, 14, 0.98) 100%);
 }
 
 .industry-card-content {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     padding: 1.1rem 1rem;
     width: 100%;
 }
@@ -1257,8 +1282,6 @@ button, input, select, textarea {
 .cta-banner {
     position: relative;
     border-radius: var(--border-radius-md);
-    background-size: cover;
-    background-position: center 38%;
     padding: 3.5rem 2rem;
     overflow: hidden;
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
@@ -1266,15 +1289,28 @@ button, input, select, textarea {
     text-align: center;
 }
 
+.cta-banner-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 38%;
+    z-index: 1;
+    display: block;
+    transition: transform 0.65s ease;
+}
+
 .cta-overlay {
     position: absolute;
     inset: 0;
+    z-index: 2;
     background: linear-gradient(180deg, rgba(12, 13, 17, 0.4) 0%, rgba(12, 13, 17, 0.78) 60%, rgba(12, 13, 17, 0.92) 100%);
 }
 
 .cta-content {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     max-width: 650px;
     margin: 0 auto;
 }
@@ -3342,6 +3378,18 @@ button, input, select, textarea {
     font-size: 0.8rem;
 }
 
+.marquee-content span:first-child::before {
+    content: '';
+    display: inline-block;
+    width: 6.5px;
+    height: 6.5px;
+    background: #10b981;
+    border-radius: 50%;
+    margin-right: 7px;
+    vertical-align: middle;
+    box-shadow: 0 0 8px #10b981;
+}
+
 @keyframes marqueeScroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -3434,4 +3482,417 @@ button, input, select, textarea {
         bottom: 0.35rem !important;
         transform: translateX(-50%) scale(0.75);
     }
+}
+
+
+/* ==========================================================================
+   NEXORA PRECISION LUXURY ANIMATION & EFFECTS ENGINE
+   ========================================================================== */
+
+/* 1. Custom Precision Luxury Cursor */
+@media (hover: hover) and (pointer: fine) {
+    body {
+        cursor: default;
+    }
+    .custom-cursor-dot {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 6px;
+        background: #dfb76c;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 999999;
+        transform: translate(-50%, -50%);
+        transition: opacity 0.2s ease, transform 0.1s ease-out;
+        box-shadow: 0 0 10px rgba(223, 183, 108, 0.95), 0 0 20px rgba(223, 183, 108, 0.5);
+    }
+    .custom-cursor-ring {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 38px;
+        height: 38px;
+        border: 1.5px solid rgba(223, 183, 108, 0.45);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 999998;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                    height 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                    border-color 0.3s ease, 
+                    background-color 0.3s ease;
+        box-sizing: border-box;
+    }
+    .custom-cursor-ring::before,
+    .custom-cursor-ring::after {
+        content: '';
+        position: absolute;
+        background: rgba(223, 183, 108, 0.7);
+        transition: opacity 0.3s ease;
+    }
+    .custom-cursor-ring::before {
+        top: 50%;
+        left: -5px;
+        right: -5px;
+        height: 1px;
+        transform: translateY(-50%);
+    }
+    .custom-cursor-ring::after {
+        left: 50%;
+        top: -5px;
+        bottom: -5px;
+        width: 1px;
+        transform: translateX(-50%);
+    }
+    .custom-cursor-ring.cursor-hover {
+        width: 60px;
+        height: 60px;
+        border-color: rgba(223, 183, 108, 0.95);
+        background: rgba(223, 183, 108, 0.12);
+        backdrop-filter: blur(2px);
+    }
+    .custom-cursor-ring.cursor-hover::before,
+    .custom-cursor-ring.cursor-hover::after {
+        opacity: 0.25;
+    }
+    .custom-cursor-ring.cursor-click {
+        transform: translate(-50%, -50%) scale(0.8);
+        border-color: #ffffff;
+    }
+}
+@media (hover: none) or (pointer: coarse) {
+    .custom-cursor-dot, .custom-cursor-ring {
+        display: none !important;
+    }
+}
+
+/* 2. 3D Perspective Card Tilt & Interactive Spotlight */
+.product-card,
+.industry-card,
+.global-badge-card,
+.badge-card,
+.testimonial-card,
+.service-card,
+.project-card,
+.blog-card,
+.pricing-card,
+.contact-card,
+.contact-form-card,
+.why-card,
+.stat-item {
+    position: relative;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.35s ease, 
+                border-color 0.35s ease;
+    transform-style: preserve-3d;
+    overflow: hidden;
+}
+.product-card::before,
+.service-card::before,
+.industry-card::before,
+.pricing-card::before,
+.blog-card::before,
+.project-card::before,
+.why-card::before,
+.contact-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(420px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), 
+                                rgba(223, 183, 108, 0.18), 
+                                transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    transition: opacity 0.4s ease;
+}
+.product-card:hover::before,
+.service-card:hover::before,
+.industry-card:hover::before,
+.pricing-card:hover::before,
+.blog-card:hover::before,
+.project-card:hover::before,
+.why-card:hover::before,
+.contact-card:hover::before {
+    opacity: 1;
+}
+
+/* 3. Liquid Laser Light Sweep on Buttons & Badges */
+.btn-gold,
+.btn-outline,
+.btn,
+.nav-cta-btn,
+.section-eyebrow {
+    position: relative;
+    overflow: hidden;
+}
+.btn-gold::after,
+.btn-outline::after,
+.nav-cta-btn::after {
+    content: '';
+    position: absolute;
+    top: -60%;
+    left: -130%;
+    width: 50%;
+    height: 220%;
+    background: linear-gradient(
+        90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.35), 
+        rgba(223, 183, 108, 0.5), 
+        rgba(255, 255, 255, 0.35), 
+        transparent
+    );
+    transform: rotate(25deg);
+    pointer-events: none;
+    transition: none;
+    opacity: 0;
+}
+.btn-gold:hover::after,
+.btn-outline:hover::after,
+.nav-cta-btn:hover::after {
+    opacity: 1;
+    animation: laserShine 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes laserShine {
+    0% { left: -130%; }
+    100% { left: 230%; }
+}
+
+/* 4. Ambient Blueprint Rotating Caliper Gear Dial Watermarks */
+.blueprint-watermark {
+    position: absolute;
+    width: 650px;
+    height: 650px;
+    pointer-events: none;
+    opacity: 0.045;
+    z-index: 1;
+    user-select: none;
+    overflow: hidden;
+}
+.blueprint-hero-top {
+    top: -120px;
+    right: -120px;
+}
+.blueprint-why-bottom {
+    bottom: -150px;
+    left: -150px;
+}
+.blueprint-cta {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 750px;
+    height: 750px;
+    opacity: 0.055;
+}
+.dial-spin-clockwise {
+    animation: blueprintSpin 100s linear infinite;
+    transform-origin: center center;
+}
+.dial-spin-counter {
+    animation: blueprintSpinReverse 70s linear infinite;
+    transform-origin: center center;
+}
+@keyframes blueprintSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@keyframes blueprintSpinReverse {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+/* 5. Scroll-Driven Reveal System */
+.reveal-fade-up {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+.reveal-fade-left {
+    opacity: 0;
+    transform: translateX(-35px);
+    transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+.reveal-fade-right {
+    opacity: 0;
+    transform: translateX(35px);
+    transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+.reveal-scale-up {
+    opacity: 0;
+    transform: scale(0.93) translateY(20px);
+    transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+.is-revealed {
+    opacity: 1 !important;
+    transform: translateY(0) translateX(0) scale(1) !important;
+}
+
+/* 6. Gold Text Shimmer Animation */
+.gold-text-shimmer {
+    background: linear-gradient(
+        90deg, 
+        #c89b3c 0%, 
+        #dfb76c 25%, 
+        #ffffff 50%, 
+        #dfb76c 75%, 
+        #c89b3c 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textShimmerSweep 7s linear infinite;
+}
+@keyframes textShimmerSweep {
+    to { background-position: 200% center; }
+}
+
+/* 7. Live Radar Pulse Status Indicator */
+.radar-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #dfb76c;
+}
+.radar-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    display: inline-block;
+}
+.radar-dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border: 1.5px solid #10b981;
+    border-radius: 50%;
+    animation: radarRing 1.8s cubic-bezier(0.1, 0.7, 0.1, 1) infinite;
+}
+@keyframes radarRing {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* 8. Circular Scroll Gauge & Back-to-Top Button */
+.scroll-gauge-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(10, 11, 14, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(223, 183, 108, 0.35);
+    color: #dfb76c;
+    cursor: pointer;
+    z-index: 995;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.9);
+    transition: opacity 0.35s ease, 
+                visibility 0.35s ease, 
+                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+}
+.scroll-gauge-btn.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+.scroll-gauge-btn:hover {
+    border-color: #dfb76c;
+    box-shadow: 0 0 20px rgba(223, 183, 108, 0.4), 0 10px 35px rgba(0, 0, 0, 0.8);
+    transform: translateY(-4px) scale(1.06);
+}
+.scroll-gauge-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+.scroll-gauge-circle-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.08);
+    stroke-width: 2.5;
+}
+.scroll-gauge-circle-bar {
+    fill: none;
+    stroke: #dfb76c;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 138.23;
+    stroke-dashoffset: 138.23;
+    transition: stroke-dashoffset 0.12s ease-out;
+}
+.scroll-gauge-arrow {
+    font-size: 1.15rem;
+    line-height: 1;
+    transition: transform 0.25s ease;
+}
+.scroll-gauge-btn:hover .scroll-gauge-arrow {
+    transform: translateY(-3px);
+}
+@media (max-width: 768px) {
+    .scroll-gauge-btn {
+        bottom: 1.25rem;
+        right: 1.25rem;
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* 9. Ambient Dust Particles Canvas */
+#ambientDustCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.65;
+}
+
+/* 10. Micro-Hover Smooth Float on Badges and Feature Icons */
+.feature-icon-box,
+.service-icon,
+.stat-icon,
+.why-icon {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.35s ease, 
+                border-color 0.35s ease;
+}
+.product-card:hover .circle-arrow-btn,
+.service-card:hover .service-icon,
+.why-card:hover .why-icon,
+.stat-item:hover .stat-icon {
+    transform: scale(1.12) rotate(4deg);
+    box-shadow: 0 0 25px rgba(223, 183, 108, 0.35);
 }
