@@ -1,526 +1,350 @@
+/**
+ * NEXORA PRECISION BEARINGS - INTERACTIVE ENGINE
+ * Handcrafted Vanilla JavaScript for optimal performance and smooth luxury UX
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // Mobile Hamburger Menu
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('navLinks');
 
-    hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-    });
+    /* ==========================================================================
+       1. STICKY HEADER & SCROLL BEHAVIOR
+       ========================================================================== */
+    const siteHeader = document.getElementById('siteHeader');
 
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-        });
-    });
-
-    // Navbar Scroll Effect
-    const navbar = document.getElementById('navbar');
-    
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
+        if (!siteHeader) return;
+        if (window.scrollY > 40) {
+            siteHeader.classList.add('scrolled');
         } else {
-            navbar.classList.remove('scrolled');
+            siteHeader.classList.remove('scrolled');
         }
     });
 
-    // 3D Card Tilt Effect
-    const cards = document.querySelectorAll('.card');
+    /* ==========================================================================
+       2. MOBILE MENU TOGGLE
+       ========================================================================== */
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navMenu = document.getElementById('navMenu');
+    const navLinks = document.querySelectorAll('.nav-link');
 
-    cards.forEach(card => {
-        card.addEventListener('mousemove', e => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left; // x position within the element.
-            const y = e.clientY - rect.top;  // y position within the element.
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            // Calculate rotation based on cursor position relative to center
-            const rotateX = ((y - centerY) / centerY) * -10; // Max rotation 10deg
-            const rotateY = ((x - centerX) / centerX) * 10;
-            
-            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    if (mobileToggle && navMenu) {
+        mobileToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('open');
+            mobileToggle.classList.toggle('active');
         });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('open');
+                mobileToggle.classList.remove('active');
+            });
+        });
+    }
+
+    /* ==========================================================================
+       3. HERO BANNER AUTO-SLIDER (ROBUST & CONTINUOUS)
+       ========================================================================== */
+    const heroSlides = document.querySelectorAll('.hero-slide');
+    const heroDots = document.querySelectorAll('.hero-dot-btn');
+    const heroPrevArrow = document.getElementById('heroPrevArrow');
+    const heroNextArrow = document.getElementById('heroNextArrow');
+    const countCurrent = document.getElementById('countCurrent');
+    let currentHeroIndex = 0;
+    let heroTimer = null;
+
+    function showHeroSlide(index) {
+        if (!heroSlides.length) return;
         
-        card.addEventListener('mouseleave', () => {
-            // Reset transform when mouse leaves
-            card.style.transform = 'rotateX(0) rotateY(0)';
-            card.style.transition = 'transform 0.5s ease';
-        });
-        
-        card.addEventListener('mouseenter', () => {
-            // Remove transition during hover for instant response
-            card.style.transition = 'none';
-        });
-    });
+        if (index < 0) {
+            index = heroSlides.length - 1;
+        } else if (index >= heroSlides.length) {
+            index = 0;
+        }
 
-    // Dynamically add animation classes to elements
-    const elementsToAnimate = document.querySelectorAll('.section-header, .service-card, .timeline-item, .card-wrapper, .echo-card, .contact-container');
-    elementsToAnimate.forEach((el, index) => {
-        el.classList.add('animate-on-scroll');
-        const delay = (index % 3) * 100; 
-        if(delay > 0) el.classList.add(`delay-${delay}`);
-    });
-
-    // Scroll Animations (Intersection Observer)
-    const animateElements = document.querySelectorAll('.animate-on-scroll');
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px"
-    };
-
-    const scrollObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in-view');
-                observer.unobserve(entry.target);
+        heroSlides.forEach((slide, i) => {
+            if (i === index) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
             }
         });
-    }, observerOptions);
 
-    animateElements.forEach(el => {
-        scrollObserver.observe(el);
-    });
-
-    // ==========================================
-    // Royal Hero Showcase: Slider + Parallax + Sparkles Engine
-    // ==========================================
-    const heroSlider = document.querySelector('.hero-slider');
-    const sliderViewport = document.getElementById('sliderViewport');
-    const sliderTrack = document.getElementById('sliderTrack');
-    const slides = document.querySelectorAll('.slide');
-    const prevBtn = document.getElementById('prevSlide');
-    const nextBtn = document.getElementById('nextSlide');
-    const dots = document.querySelectorAll('.dot');
-    const progressFill = document.getElementById('sliderProgressFill');
-    const counterCur = document.querySelector('.slider-counter .cur-index');
-    const heroBadge = document.getElementById('heroBadge');
-    
-
-    if (sliderTrack && slides.length > 0) {
-        let currentIndex = 0;
-        let progressAnimFrame = null;
-        const autoSlideDelay = 5200; // 5.2s per slide
-        let progressStartTime = 0;
-        let isPaused = false;
-        let elapsedBeforePause = 0;
-
-        // --- Slide Update ---
-        const updateSlider = (index) => {
-            if (index < 0) index = slides.length - 1;
-            if (index >= slides.length) index = 0;
-            currentIndex = index;
-
-            sliderTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
-
-            slides.forEach((s, idx) => {
-                if (idx === currentIndex) {
-                    s.classList.add('active-slide');
-                } else {
-                    s.classList.remove('active-slide');
-                }
-            });
-
-            dots.forEach((dot, idx) => {
-                if (idx === currentIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-
-            if (counterCur) {
-                counterCur.textContent = String(currentIndex + 1).padStart(2, '0');
+        heroDots.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
             }
+        });
 
-            resetProgress();
-        };
+        if (countCurrent) {
+            countCurrent.textContent = String(index + 1).padStart(2, '0');
+        }
 
-        // --- Progress Bar Animation ---
-        const startProgress = () => {
-            if (progressAnimFrame) cancelAnimationFrame(progressAnimFrame);
-            progressStartTime = performance.now() - elapsedBeforePause;
+        currentHeroIndex = index;
+    }
 
-            const step = (now) => {
-                if (isPaused) return;
-                const elapsed = now - progressStartTime;
-                const pct = Math.min((elapsed / autoSlideDelay) * 100, 100);
+    function startHeroAutoSlide() {
+        if (heroTimer) clearInterval(heroTimer);
+        heroTimer = setInterval(() => {
+            showHeroSlide(currentHeroIndex + 1);
+        }, 4500); // Transitions smoothly every 4.5 seconds
+    }
 
-                if (progressFill) {
-                    progressFill.style.width = `${pct}%`;
-                }
+    function resetHeroAutoSlide() {
+        startHeroAutoSlide();
+    }
 
-                if (elapsed >= autoSlideDelay) {
-                    elapsedBeforePause = 0;
-                    updateSlider(currentIndex + 1);
-                    startProgress();
-                } else {
-                    progressAnimFrame = requestAnimationFrame(step);
-                }
-            };
-            progressAnimFrame = requestAnimationFrame(step);
-        };
+    if (heroSlides.length > 0) {
+        // Initialize first slide
+        showHeroSlide(0);
+        startHeroAutoSlide();
 
-        const resetProgress = () => {
-            elapsedBeforePause = 0;
-            if (progressFill) progressFill.style.width = '0%';
-            if (progressAnimFrame) cancelAnimationFrame(progressAnimFrame);
-            if (!isPaused) {
-                startProgress();
-            }
-        };
-
-        const pauseSlider = () => {
-            if (!isPaused) {
-                isPaused = true;
-                elapsedBeforePause = performance.now() - progressStartTime;
-                if (progressAnimFrame) cancelAnimationFrame(progressAnimFrame);
-            }
-        };
-
-        const resumeSlider = () => {
-            if (isPaused) {
-                isPaused = false;
-                startProgress();
-            }
-        };
-
-        // Controls
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                updateSlider(currentIndex + 1);
+        // Arrow navigation
+        if (heroPrevArrow) {
+            heroPrevArrow.addEventListener('click', (e) => {
+                e.preventDefault();
+                showHeroSlide(currentHeroIndex - 1);
+                resetHeroAutoSlide();
             });
         }
 
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                updateSlider(currentIndex - 1);
+        if (heroNextArrow) {
+            heroNextArrow.addEventListener('click', (e) => {
+                e.preventDefault();
+                showHeroSlide(currentHeroIndex + 1);
+                resetHeroAutoSlide();
             });
         }
 
-        dots.forEach(dot => {
+        // Dot navigation
+        heroDots.forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                e.preventDefault();
+                const idx = parseInt(dot.getAttribute('data-index'), 10);
+                if (!isNaN(idx)) {
+                    showHeroSlide(idx);
+                    resetHeroAutoSlide();
+                }
+            });
+        });
+    }
+
+    /* ==========================================================================
+       4. TESTIMONIALS SLIDER
+       ========================================================================== */
+    const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+    const testimonialDots = document.querySelectorAll('.dot-btn');
+    const prevTestimonialBtn = document.getElementById('prevTestimonial');
+    const nextTestimonialBtn = document.getElementById('nextTestimonial');
+    let currentTestimonialIndex = 0;
+    let testimonialTimer = null;
+
+    function showTestimonial(index) {
+        if (!testimonialSlides.length) return;
+        if (index < 0) index = testimonialSlides.length - 1;
+        if (index >= testimonialSlides.length) index = 0;
+
+        testimonialSlides.forEach((slide, i) => {
+            if (i === index) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+
+        testimonialDots.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+
+        currentTestimonialIndex = index;
+    }
+
+    if (testimonialSlides.length > 0) {
+        showTestimonial(0);
+
+        testimonialTimer = setInterval(() => {
+            showTestimonial(currentTestimonialIndex + 1);
+        }, 6000);
+
+        if (prevTestimonialBtn) {
+            prevTestimonialBtn.addEventListener('click', () => {
+                showTestimonial(currentTestimonialIndex - 1);
+                clearInterval(testimonialTimer);
+            });
+        }
+
+        if (nextTestimonialBtn) {
+            nextTestimonialBtn.addEventListener('click', () => {
+                showTestimonial(currentTestimonialIndex + 1);
+                clearInterval(testimonialTimer);
+            });
+        }
+
+        testimonialDots.forEach(dot => {
             dot.addEventListener('click', () => {
-                const targetIdx = parseInt(dot.getAttribute('data-index'), 10);
-                updateSlider(targetIdx);
-            });
-        });
-
-        // Hover pause on slider
-        if (heroSlider) {
-            heroSlider.addEventListener('mouseenter', pauseSlider);
-            heroSlider.addEventListener('mouseleave', resumeSlider);
-        }
-
-        // Touch swipe gestures
-        let touchStartX = 0;
-        let touchEndX = 0;
-        if (heroSlider) {
-            heroSlider.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-                pauseSlider();
-            }, { passive: true });
-
-            heroSlider.addEventListener('touchend', (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                const diff = touchStartX - touchEndX;
-                if (Math.abs(diff) > 45) {
-                    if (diff > 0) updateSlider(currentIndex + 1);
-                    else updateSlider(currentIndex - 1);
+                const idx = parseInt(dot.getAttribute('data-index'), 10);
+                if (!isNaN(idx)) {
+                    showTestimonial(idx);
+                    clearInterval(testimonialTimer);
                 }
-                resumeSlider();
-            }, { passive: true });
-        }
-
-        // Initialize progress
-        updateSlider(0);
-        startProgress();
+            });
+        });
     }
 
+    /* ==========================================================================
+       5. MODAL SYSTEM (QUOTE MODAL)
+       ========================================================================== */
+    const modalTriggers = document.querySelectorAll('.modal-trigger');
+    const modalBackdrops = document.querySelectorAll('.modal-backdrop');
+    const modalCloses = document.querySelectorAll('.modal-close');
 
-    // ---- Occasions slider ----
-    const occTrack = document.getElementById("occTrack");
-    const occPrev = document.getElementById("occPrev");
-    const occNext = document.getElementById("occNext");
-    if (occTrack && occPrev && occNext) {
-        occPrev.addEventListener("click", () => occTrack.scrollBy({ left: -220, behavior: "smooth" }));
-        occNext.addEventListener("click", () => occTrack.scrollBy({ left: 220, behavior: "smooth" }));
-    }
-
-    // ---- Featured cards slider (smooth auto-slide + arrow navigation) ----
-    const featTrack = document.getElementById("featTrack");
-    const featPrev = document.getElementById("featPrev");
-    const featNext = document.getElementById("featNext");
-
-    if (featTrack) {
-        let featAutoSlideInterval;
-        const featDelay = 3200; // 3.2s smooth auto-scroll
-
-        const getScrollAmount = () => {
-            const firstCard = featTrack.querySelector(".feat-card");
-            return firstCard ? firstCard.offsetWidth + 24 : 224;
-        };
-
-        const slideNextCard = () => {
-            const step = getScrollAmount();
-            const maxScroll = featTrack.scrollWidth - featTrack.clientWidth;
-            
-            if (featTrack.scrollLeft >= maxScroll - 20) {
-                featTrack.scrollTo({ left: 0, behavior: "smooth" });
-            } else {
-                featTrack.scrollBy({ left: step, behavior: "smooth" });
+    modalTriggers.forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            const modalId = trigger.getAttribute('data-modal');
+            const targetModal = document.getElementById(modalId);
+            if (targetModal) {
+                e.preventDefault();
+                targetModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
             }
-        };
-
-        const slidePrevCard = () => {
-            const step = getScrollAmount();
-            if (featTrack.scrollLeft <= 20) {
-                featTrack.scrollTo({ left: featTrack.scrollWidth - featTrack.clientWidth, behavior: "smooth" });
-            } else {
-                featTrack.scrollBy({ left: -step, behavior: "smooth" });
-            }
-        };
-
-        const startFeatAutoSlide = () => {
-            stopFeatAutoSlide();
-            featAutoSlideInterval = setInterval(slideNextCard, featDelay);
-        };
-
-        const stopFeatAutoSlide = () => {
-            if (featAutoSlideInterval) clearInterval(featAutoSlideInterval);
-        };
-
-        if (featNext) {
-            featNext.addEventListener("click", () => {
-                slideNextCard();
-                startFeatAutoSlide();
-            });
-        }
-
-        if (featPrev) {
-            featPrev.addEventListener("click", () => {
-                slidePrevCard();
-                startFeatAutoSlide();
-            });
-        }
-
-        // Pause on mouse hover & resume on mouse leave
-        featTrack.addEventListener("mouseenter", stopFeatAutoSlide);
-        featTrack.addEventListener("mouseleave", startFeatAutoSlide);
-        featTrack.addEventListener("touchstart", stopFeatAutoSlide, { passive: true });
-        featTrack.addEventListener("touchend", startFeatAutoSlide, { passive: true });
-
-        // Start auto-slide on page load
-        startFeatAutoSlide();
-    }
-
-
-    // ---- Staggered Occasion items entrance ----
-    const occItems = document.querySelectorAll(".occ-item");
-    const occObserver = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-            occItems.forEach((item, i) => {
-                setTimeout(() => {
-                    item.classList.add("occ-visible");
-                }, i * 80);
-            });
-            occObserver.disconnect();
-        }
-    }, { threshold: 0.2 });
-    if (occItems.length) occObserver.observe(occItems[0].closest("section"));
-
-    // Occasion click active pulse
-    occItems.forEach(item => {
-        item.addEventListener("click", () => {
-            occItems.forEach(i => i.classList.remove("active-occ"));
-            item.classList.add("active-occ");
         });
     });
 
-    // ---- General scroll reveal ----
-    const revealEls = document.querySelectorAll(
-        ".feat-card, .testi-card, .why-feat, .why-quote, .why-header-wrap, .g-item, .process-card, .process-showcase, .nl-inner, .contact-container, .feat-sidebar"
-    );
-    revealEls.forEach((el, i) => {
-        el.classList.add("reveal");
-        if (i % 4 === 1) el.classList.add("reveal-delay-1");
-        else if (i % 4 === 2) el.classList.add("reveal-delay-2");
-        else if (i % 4 === 3) el.classList.add("reveal-delay-3");
+    modalCloses.forEach(closeBtn => {
+        closeBtn.addEventListener('click', () => {
+            modalBackdrops.forEach(m => m.classList.remove('open'));
+            document.body.style.overflow = '';
+        });
     });
 
-    const revObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("revealed");
-                revObserver.unobserve(entry.target);
+    modalBackdrops.forEach(backdrop => {
+        backdrop.addEventListener('click', (e) => {
+            if (e.target === backdrop) {
+                backdrop.classList.remove('open');
+                document.body.style.overflow = '';
             }
         });
-    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    });
 
-    document.querySelectorAll(".reveal").forEach(el => revObserver.observe(el));
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            modalBackdrops.forEach(m => m.classList.remove('open'));
+            document.body.style.overflow = '';
+            closeSearchOverlay();
+        }
+    });
 
-    // ---- Gallery Category Filter Logic ----
-    const filterBtns = document.querySelectorAll(".g-filter");
-    const galleryItems = document.querySelectorAll(".g-item");
+    /* ==========================================================================
+       6. SEARCH OVERLAY
+       ========================================================================== */
+    const searchTrigger = document.getElementById('searchTrigger');
+    const searchOverlay = document.getElementById('searchOverlay');
+    const searchClose = document.getElementById('searchClose');
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            filterBtns.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
+    function closeSearchOverlay() {
+        if (searchOverlay) {
+            searchOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    }
 
-            const filterValue = btn.getAttribute("data-filter");
+    if (searchTrigger && searchOverlay) {
+        searchTrigger.addEventListener('click', () => {
+            searchOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            if (searchInput) setTimeout(() => searchInput.focus(), 100);
+        });
 
-            galleryItems.forEach(item => {
-                const category = item.getAttribute("data-category");
-                if (filterValue === "all" || category === filterValue) {
-                    item.classList.remove("filtered-out");
-                    item.style.animation = "fadeInScale 0.45s ease forwards";
+        if (searchClose) {
+            searchClose.addEventListener('click', closeSearchOverlay);
+        }
+
+        searchOverlay.addEventListener('click', (e) => {
+            if (e.target === searchOverlay) closeSearchOverlay();
+        });
+
+        if (searchInput && searchResults) {
+            searchInput.addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase().trim();
+                if (q.length === 0) {
+                    searchResults.innerHTML = `<div class="search-hint">Quick suggestions: <strong>Deep Groove</strong>, <strong>Tapered 32000</strong>, <strong>Spherical 22200</strong>, <strong>Wind Energy</strong></div>`;
+                    return;
+                }
+
+                const matches = [
+                    { title: 'Deep Groove Ball Bearings (Series 6000, 6200, 6300)', desc: 'High radial capacity and quiet operation', url: 'services-details.html' },
+                    { title: 'Cylindrical Roller Bearings (Series N, NU, NJ, NUP)', desc: 'Heavy radial load capacity with brass cage', url: 'services-details.html' },
+                    { title: 'Tapered Roller Bearings (Series 30200, 32200, 32300)', desc: 'Designed for combined high axial & radial loads', url: 'services-details.html' },
+                    { title: 'Spherical Roller Bearings (Series 22200, 22300, 23000)', desc: 'Self-aligning heavy industrial solutions', url: 'services-details.html' },
+                    { title: 'Renewable Energy Solutions', desc: 'Wind turbine main shaft and yaw drive bearings', url: 'project.html' },
+                    { title: 'High-Speed Railway Hub Units', desc: 'Certified axle box bearings for rolling stock', url: 'project.html' }
+                ].filter(item => item.title.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q));
+
+                if (matches.length > 0) {
+                    searchResults.innerHTML = matches.map(m => `
+                        <a href="${m.url}" style="display: block; padding: 0.85rem 0; border-bottom: 1px solid rgba(255,255,255,0.08); text-decoration: none;">
+                            <strong style="color: #dfb76c; display: block; font-size: 0.95rem;">${m.title}</strong>
+                            <span style="color: #a4a9b8; font-size: 0.8rem;">${m.desc}</span>
+                        </a>
+                    `).join('');
                 } else {
-                    item.classList.add("filtered-out");
+                    searchResults.innerHTML = `<p style="color: #8c92a2; font-size: 0.88rem; margin-top: 1rem;">No direct matches found for "${q}". <a href="contact-us.html" style="color: #dfb76c;">Contact our engineers &rarr;</a></p>`;
                 }
             });
-        });
-    });
-
-    // ---- Gallery Lightbox Modal Controller ----
-    const lightbox = document.getElementById("galleryLightbox");
-    const lightboxImg = document.getElementById("lightboxImg");
-    const lightboxTag = document.getElementById("lightboxTag");
-    const lightboxTitle = document.getElementById("lightboxTitle");
-    const lightboxDesc = document.getElementById("lightboxDesc");
-    const lightboxCounter = document.getElementById("lightboxCounter");
-    const lightboxClose = document.getElementById("lightboxClose");
-    const lightboxPrev = document.getElementById("lightboxPrev");
-    const lightboxNext = document.getElementById("lightboxNext");
-
-    if (lightbox && galleryItems.length > 0) {
-        let currentGalleryIndex = 0;
-
-        // Collect visible gallery item data
-        const getGalleryData = () => {
-            const visibleItems = Array.from(galleryItems).filter(item => !item.classList.contains("filtered-out"));
-            return visibleItems.map(item => {
-                const img = item.querySelector("img");
-                const tag = item.querySelector(".g-tag");
-                const title = item.querySelector("h3");
-                const desc = item.querySelector("p");
-                return {
-                    src: img ? img.getAttribute("src") : "",
-                    alt: img ? img.getAttribute("alt") : "Gallery Image",
-                    tag: tag ? tag.textContent : "Real Celebration",
-                    title: title ? title.textContent : "",
-                    desc: desc ? desc.textContent : ""
-                };
-            });
-        };
-
-        const updateLightboxContent = (index) => {
-            const data = getGalleryData();
-            if (data.length === 0) return;
-
-            if (index < 0) index = data.length - 1;
-            if (index >= data.length) index = 0;
-            currentGalleryIndex = index;
-
-            const item = data[currentGalleryIndex];
-
-            // Smooth fade transition
-            lightboxImg.style.opacity = "0";
-            lightboxImg.style.transform = "scale(0.96)";
-
-            setTimeout(() => {
-                lightboxImg.src = item.src;
-                lightboxImg.alt = item.alt;
-                if (lightboxTag) lightboxTag.textContent = item.tag;
-                if (lightboxTitle) lightboxTitle.textContent = item.title;
-                if (lightboxDesc) lightboxDesc.textContent = item.desc;
-                if (lightboxCounter) lightboxCounter.textContent = `${currentGalleryIndex + 1} / ${data.length}`;
-
-                lightboxImg.style.opacity = "1";
-                lightboxImg.style.transform = "scale(1)";
-            }, 150);
-        };
-
-        const openLightbox = (index) => {
-            currentGalleryIndex = index;
-            updateLightboxContent(currentGalleryIndex);
-            lightbox.classList.add("active");
-            lightbox.setAttribute("aria-hidden", "false");
-            document.body.style.overflow = "hidden"; // Lock background scroll
-        };
-
-        const closeLightbox = () => {
-            lightbox.classList.remove("active");
-            lightbox.setAttribute("aria-hidden", "true");
-            document.body.style.overflow = "";
-        };
-
-        // Attach click to all gallery items
-        galleryItems.forEach(item => {
-            item.addEventListener("click", () => {
-                const data = getGalleryData();
-                const imgSrc = item.querySelector("img")?.getAttribute("src");
-                const idx = data.findIndex(d => d.src === imgSrc);
-                openLightbox(idx !== -1 ? idx : 0);
-            });
-        });
-
-        if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
-        if (lightboxPrev) lightboxPrev.addEventListener("click", () => updateLightboxContent(currentGalleryIndex - 1));
-        if (lightboxNext) lightboxNext.addEventListener("click", () => updateLightboxContent(currentGalleryIndex + 1));
-
-        // Click outside image to close
-        const backdrop = lightbox.querySelector(".lightbox-backdrop");
-        if (backdrop) backdrop.addEventListener("click", closeLightbox);
-
-        // Keyboard navigation (Esc to close, Left/Right arrows)
-        window.addEventListener("keydown", (e) => {
-            if (!lightbox.classList.contains("active")) return;
-            if (e.key === "Escape") closeLightbox();
-            else if (e.key === "ArrowLeft") updateLightboxContent(currentGalleryIndex - 1);
-            else if (e.key === "ArrowRight") updateLightboxContent(currentGalleryIndex + 1);
-        });
-    }
-
-
-
-    // ---- Premium Occasions Slider (Manual) ----
-    const occT = document.getElementById("occTrack");
-    const occP = document.getElementById("occPrev");
-    const occN = document.getElementById("occNext");
-    const occItemEls = document.querySelectorAll(".occ-item");
-
-    if (occT && occP && occN) {
-        let occActiveIdx = 0;
-
-        function scrollToOccItem(idx) {
-            if (idx < 0) idx = occItemEls.length - 1;
-            if (idx >= occItemEls.length) idx = 0;
-            occActiveIdx = idx;
-
-            occItemEls.forEach(i => i.classList.remove("selected"));
-            occItemEls[occActiveIdx].classList.add("selected");
-
-            const item = occItemEls[occActiveIdx];
-            const trackRect = occT.getBoundingClientRect();
-            const itemRect = item.getBoundingClientRect();
-            const scrollLeft = occT.scrollLeft + (itemRect.left - trackRect.left) - (trackRect.width / 2) + (itemRect.width / 2);
-            occT.scrollTo({ left: scrollLeft, behavior: "smooth" });
-        }
-
-        occP.addEventListener("click", () => scrollToOccItem(occActiveIdx - 1));
-        occN.addEventListener("click", () => scrollToOccItem(occActiveIdx + 1));
-
-        occItemEls.forEach((item, i) => {
-            item.addEventListener("click", () => scrollToOccItem(i));
-        });
-
-        // Init first item selected
-        if (occItemEls.length > 0) {
-            occItemEls[0].classList.add("selected");
         }
     }
 
+    /* ==========================================================================
+       7. FORMS & TOAST NOTIFICATION
+       ========================================================================== */
+    const toastNotice = document.getElementById('toastNotice');
+    const toastTitle = document.getElementById('toastTitle');
+    const toastMessage = document.getElementById('toastMessage');
+
+    function showToast(title, message) {
+        if (!toastNotice) return;
+        toastTitle.textContent = title;
+        toastMessage.textContent = message;
+        toastNotice.classList.add('show');
+        setTimeout(() => {
+            toastNotice.classList.remove('show');
+        }, 4500);
+    }
+
+    const quoteForm = document.getElementById('quoteForm');
+    if (quoteForm) {
+        quoteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('qName') ? document.getElementById('qName').value : 'Client';
+            modalBackdrops.forEach(m => m.classList.remove('open'));
+            document.body.style.overflow = '';
+            quoteForm.reset();
+            showToast('Quote Request Received', `Thank you, ${name}! An engineer will prepare your technical quote within 2 business hours.`);
+        });
+    }
+
+    const contactPageForm = document.getElementById('contactPageForm');
+    if (contactPageForm) {
+        contactPageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            contactPageForm.reset();
+            showToast('Inquiry Dispatched', 'Thank you! A technical application engineer will contact you shortly.');
+        });
+    }
+
+    const newsletterForm = document.getElementById('newsletterForm');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            newsletterForm.reset();
+            showToast('Subscribed Successfully', 'Thank you for subscribing to Nexora engineering insights.');
+        });
+    }
 
 });

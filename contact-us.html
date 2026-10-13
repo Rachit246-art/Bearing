@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Engineering & Request Quote | Nexora Precision Bearings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Top Sliding Announcement Strip -->
+    <div class="announcement-strip" role="region" aria-label="Nexora Announcements">
+        <div class="marquee-track">
+            <div class="marquee-content">
+                <span>✦ ISO 9001:2015 & IATF 16949 Certified Manufacturing</span>
+                <span class="sep-dot">&bull;</span>
+                <span>✦ Global JIT Express Delivery to 50+ Countries</span>
+                <span class="sep-dot">&bull;</span>
+                <span>✦ Free 3D STEP / CAD Engineering Data Available</span>
+                <span class="sep-dot">&bull;</span>
+                <span>✦ High-Precision Tolerances up to ABEC-9 / P2 Standards</span>
+                <span class="sep-dot">&bull;</span>
+                <span>✦ Direct Technical Sales Hotline: +91 98765 43210</span>
+                <span class="sep-dot">&bull;</span>
+                <span>✦ Inquire for Tier-1 OEM Sourcing & Production Volume Pricing</span>
+                <span class="sep-dot">&bull;</span>
+            </div>
+            <!-- Duplicate for seamless infinite loop -->
+            <div class="marquee-content" aria-hidden="true">
+                <span>✦ ISO 9001:2015 & IATF 16949 Certified Manufacturing</span>
+                <span class="sep-dot">&bull;</span>
+                <span>✦ Global JIT Express Delivery to 50+ Countries</span>
+                <span class="sep-dot">&bull;</span>
+                <span>✦ Free 3D STEP / CAD Engineering Data Available</span>
+                <span class="sep-dot">&bull;</span>
+                <span>✦ High-Precision Tolerances up to ABEC-9 / P2 Standards</span>
+                <span class="sep-dot">&bull;</span>
+                <span>✦ Direct Technical Sales Hotline: +91 98765 43210</span>
+                <span class="sep-dot">&bull;</span>
+                <span>✦ Inquire for Tier-1 OEM Sourcing & Production Volume Pricing</span>
+                <span class="sep-dot">&bull;</span>
+            </div>
+        </div>
+    </div>
+
+    
+    <header class="site-header" id="siteHeader">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo" aria-label="Nexora Precision Bearings Home">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-svg">
+                        <circle cx="22" cy="22" r="20" stroke="url(#goldGrad)" stroke-width="1.8"/>
+                        <circle cx="22" cy="22" r="14" stroke="url(#goldGrad)" stroke-width="1.2" stroke-dasharray="3 3"/>
+                        <circle cx="22" cy="22" r="8" fill="url(#goldGrad)"/>
+                        <circle cx="22" cy="7" r="2.5" fill="#e5c07b"/>
+                        <circle cx="37" cy="22" r="2.5" fill="#e5c07b"/>
+                        <circle cx="22" cy="37" r="2.5" fill="#e5c07b"/>
+                        <circle cx="7" cy="22" r="2.5" fill="#e5c07b"/>
+                        <defs>
+                            <linearGradient id="goldGrad" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#f6dfa9"/>
+                                <stop offset="50%" stop-color="#d4af37"/>
+                                <stop offset="100%" stop-color="#9a7322"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="logo-text-group">
+                    <span class="logo-title">NEXORA</span>
+                    <span class="logo-subtitle">PRECISION BEARINGS</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu" id="navMenu">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="nav-link ">Home</a></li>
+                    <li><a href="about-us.html" class="nav-link ">About</a></li>
+                    <li><a href="services.html" class="nav-link ">Services</a></li>
+                    <li><a href="project.html" class="nav-link ">Projects</a></li>
+                    <li><a href="pricing.html" class="nav-link ">Pricing</a></li>
+                    <li><a href="blog-3-colum.html" class="nav-link ">Insights</a></li>
+                    <li><a href="contact-us.html" class="nav-link active">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="search-trigger" id="searchTrigger" aria-label="Open Search">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+                <a href="contact-us.html" class="btn btn-gold btn-quote modal-trigger" data-modal="quoteModal">Get a Quote <span class="btn-arrow">&rarr;</span></a>
+                <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Menu">
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+
+    <!-- Page Banner -->
+    <section class="page-banner">
+        <div class="page-banner-glow" aria-hidden="true"></div>
+        <div class="container">
+            <div class="page-banner-content">
+                <div class="breadcrumb-nav">
+                    <a href="index.html">Home</a>
+                    <span class="breadcrumb-sep">&gt;</span><span>Contact Us</span>
+                </div>
+                <h1 class="page-title">Contact Our Engineering Team</h1>
+                <p class="page-lead">Get in touch with our technical sales division for rapid RFQ turnarounds, 3D CAD models, or custom bearing tolerances.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        
+<section class="inner-section light">
+    <div class="container">
+        <div class="contact-layout-grid">
+            <!-- Left Info Panel -->
+            <div class="contact-info-panel">
+                <div>
+                    <span class="section-eyebrow">GET IN TOUCH</span>
+                    <h2 class="section-title">Connect with Our Engineers</h2>
+                    <p class="section-subtitle" style="margin-bottom: 2rem;">Our technical sales and engineering departments provide rapid turnaround on RFQs, CAD data, and custom bearing tooling.</p>
+                </div>
+
+                <div class="contact-card-box">
+                    <div class="contact-icon-wrap">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    </div>
+                    <div>
+                        <strong style="display: block; font-size: 0.95rem; color: var(--text-dark-primary);">Direct Phone Line</strong>
+                        <span style="font-size: 0.85rem; color: var(--text-dark-secondary);">+91 98765 43210</span>
+                        <div style="font-size: 0.75rem; color: var(--text-dark-muted); margin-top: 3px;">Mon &ndash; Sat: 8:00 AM &ndash; 7:00 PM IST</div>
+                    </div>
+                </div>
+
+                <div class="contact-card-box">
+                    <div class="contact-icon-wrap">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div>
+                        <strong style="display: block; font-size: 0.95rem; color: var(--text-dark-primary);">Engineering Inquiries</strong>
+                        <span style="font-size: 0.85rem; color: var(--text-dark-secondary);">info@nexorabearings.com</span>
+                        <div style="font-size: 0.75rem; color: var(--text-dark-muted); margin-top: 3px;">Typical response time under 2 hours</div>
+                    </div>
+                </div>
+
+                <div class="contact-card-box">
+                    <div class="contact-icon-wrap">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <div>
+                        <strong style="display: block; font-size: 0.95rem; color: var(--text-dark-primary);">Manufacturing Headquarters</strong>
+                        <span style="font-size: 0.85rem; color: var(--text-dark-secondary);">Plot No. 123, Industrial Area, New Delhi, India</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Form Card -->
+            <div class="contact-form-card dark-form">
+                <span class="modal-eyebrow">DIRECT INQUIRY</span>
+                <h3 style="font-family: var(--font-heading); font-size: 1.8rem; color: #fff; margin: 0.3rem 0 1.5rem;">Request a Technical Quote</h3>
+                
+                <form id="contactPageForm" class="modal-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cpName">Full Name *</label>
+                            <input type="text" id="cpName" required placeholder="John Smith">
+                        </div>
+                        <div class="form-group">
+                            <label for="cpCompany">Company / Plant *</label>
+                            <input type="text" id="cpCompany" required placeholder="Apex Heavy Industries">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cpEmail">Business Email *</label>
+                            <input type="email" id="cpEmail" required placeholder="jsmith@apex.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="cpPhone">Phone Number</label>
+                            <input type="tel" id="cpPhone" placeholder="+91 98765 43210">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cpType">Bearing Type</label>
+                            <select id="cpType">
+                                <option>Deep Groove Ball Bearings</option>
+                                <option>Cylindrical Roller Bearings</option>
+                                <option>Tapered Roller Bearings</option>
+                                <option>Spherical Roller Bearings</option>
+                                <option>Custom Specialty Assembly</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cpQty">Estimated Quantity</label>
+                            <select id="cpQty">
+                                <option>Prototyping (10 - 100)</option>
+                                <option>Batch Production (100 - 1,000)</option>
+                                <option>Volume Supply (1,000+)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cpMsg">Application Notes & Operating Specs</label>
+                        <textarea id="cpMsg" rows="4" placeholder="Shaft diameter, RPM, radial load, ambient operating temperature..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-gold btn-block" style="padding: 0.9rem;">Submit Technical Inquiry &rarr;</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+    </main>
+
+    
+    <footer class="site-footer" id="footer">
+        <div class="container">
+            <div class="footer-main-grid">
+                <div class="footer-col brand-col">
+                    <a href="index.html" class="brand-logo footer-logo">
+                        <div class="logo-mark">
+                            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-svg">
+                                <circle cx="22" cy="22" r="20" stroke="url(#goldGradFooter)" stroke-width="1.8"/>
+                                <circle cx="22" cy="22" r="14" stroke="url(#goldGradFooter)" stroke-width="1.2" stroke-dasharray="3 3"/>
+                                <circle cx="22" cy="22" r="8" fill="url(#goldGradFooter)"/>
+                                <circle cx="22" cy="7" r="2.5" fill="#e5c07b"/>
+                                <circle cx="37" cy="22" r="2.5" fill="#e5c07b"/>
+                                <circle cx="22" cy="37" r="2.5" fill="#e5c07b"/>
+                                <circle cx="7" cy="22" r="2.5" fill="#e5c07b"/>
+                                <defs>
+                                    <linearGradient id="goldGradFooter" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#f6dfa9"/>
+                                        <stop offset="50%" stop-color="#d4af37"/>
+                                        <stop offset="100%" stop-color="#9a7322"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="logo-text-group">
+                            <span class="logo-title">NEXORA</span>
+                            <span class="logo-subtitle">PRECISION BEARINGS</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="footer-col links-col">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about-us.html">About Us</a></li>
+                        <li><a href="services.html">Services & Solutions</a></li>
+                        <li><a href="project.html">Engineering Projects</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col support-col">
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="pricing.html">Pricing & OEM Tiers</a></li>
+                        <li><a href="blog-3-colum.html">Technical Articles</a></li>
+                        <li><a href="contact-us.html">Request Engineering CAD</a></li>
+                        <li><a href="contact-us.html">Contact Engineering</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col contact-col">
+                    <h4 class="footer-heading">Contact</h4>
+                    <ul class="footer-contact-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#d4af37" stroke-width="1.8">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#d4af37" stroke-width="1.8">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <span>info@nexorabearings.com</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#d4af37" stroke-width="1.8">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            <span>Plot No. 123, Industrial Area,<br>New Delhi, India</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="footer-col newsletter-col">
+                    <h4 class="footer-heading">Subscribe to Our Newsletter</h4>
+                    <p class="newsletter-sub">Stay updated with our latest products and industry insights.</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <div class="newsletter-input-group">
+                            <input type="email" placeholder="Enter your email" required aria-label="Email address">
+                            <button type="submit" class="newsletter-submit-btn" aria-label="Submit">&rarr;</button>
+                        </div>
+                    </form>
+                    <div class="social-links-row">
+                        <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-icon" aria-label="LinkedIn">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                        <a href="https://facebook.com" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="https://youtube.com" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <div class="footer-copyright">&copy; 2025 Nexora Bearings. All rights reserved.</div>
+                <div class="footer-legal-links">
+                    <a href="#">Privacy Policy</a>
+                    <span class="sep">|</span>
+                    <a href="#">Terms & Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Quote Modal -->
+    <div class="modal-backdrop" id="quoteModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <div class="modal-header">
+                <span class="modal-eyebrow">CUSTOM INQUIRY</span>
+                <h3 class="modal-title">Request an Engineering Quote</h3>
+                <p class="modal-subtitle">Direct pricing from our precision technical sales division.</p>
+            </div>
+            <form class="modal-form" id="quoteForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="qName">Full Name *</label>
+                        <input type="text" id="qName" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="qCompany">Company Name *</label>
+                        <input type="text" id="qCompany" required placeholder="Precision Industrial Corp">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="qEmail">Business Email *</label>
+                        <input type="email" id="qEmail" required placeholder="johndoe@domain.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="qPhone">Phone Number</label>
+                        <input type="tel" id="qPhone" placeholder="+91 98765 00000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="qType">Bearing Series Needed</label>
+                    <select id="qType">
+                        <option value="deep-groove">Deep Groove Ball Bearings</option>
+                        <option value="roller">Cylindrical Roller Bearings</option>
+                        <option value="tapered">Tapered Roller Bearings</option>
+                        <option value="spherical">Spherical Roller Bearings</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="qMessage">Operational Specifications / Tolerances</label>
+                    <textarea id="qMessage" rows="3" placeholder="Shaft diameter, RPM limits, temperature..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-gold btn-block">Submit Quote Request &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay" aria-hidden="true">
+        <div class="search-modal-box">
+            <div class="search-header">
+                <input type="text" id="searchInput" placeholder="Search by bearing series, ISO code, or industry..." autofocus>
+                <button class="search-close-btn" id="searchClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="search-results" id="searchResults">
+                <div class="search-hint">Quick suggestions: <strong>Deep Groove</strong>, <strong>Tapered 32000</strong>, <strong>Spherical 22200</strong>, <strong>Wind Energy</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toastNotice">
+        <div class="toast-icon">&#10003;</div>
+        <div class="toast-body">
+            <strong id="toastTitle">Inquiry Sent</strong>
+            <p id="toastMessage">Our engineering team will contact you shortly.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>

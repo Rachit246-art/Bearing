@@ -1,0 +1,5 @@
+# Ignore junction loop and logs
+Bearings-main
+*.log
+.DS_Store
+Thumbs.db
